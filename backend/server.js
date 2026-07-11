@@ -10,6 +10,8 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/jobs', require('./routes/job'));
+app.use('/api/applications', require('./routes/application'));
 
 app.get('/', (req, res) => res.send('Job Portal API Running 🚀'));
 

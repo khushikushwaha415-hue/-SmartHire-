@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,15 +18,15 @@ function Dashboard() {
         <p style={{ marginTop: '0.5rem', color: '#666' }}>Role: {user.role}</p>
         <p style={{ marginTop: '0.5rem', color: '#666' }}>Email: {user.email}</p>
         <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
-          <div style={{ background: '#eff6ff', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center' }}>
+          <div onClick={() => navigate('/jobs')} style={{ background: '#eff6ff', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center', cursor: 'pointer' }}>
             <h3 style={{ color: '#1d4ed8' }}>Jobs</h3>
             <p style={{ color: '#666', marginTop: '0.5rem' }}>Browse available jobs</p>
           </div>
-          <div style={{ background: '#f0fdf4', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center' }}>
+          <div onClick={() => navigate('/resume')} style={{ background: '#f0fdf4', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center', cursor: 'pointer' }}>
             <h3 style={{ color: '#16a34a' }}>Resume</h3>
             <p style={{ color: '#666', marginTop: '0.5rem' }}>Upload & analyze resume</p>
           </div>
-          <div style={{ background: '#fdf4ff', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center' }}>
+          <div onClick={() => navigate('/profile')} style={{ background: '#fdf4ff', padding: '1.5rem', borderRadius: '8px', flex: 1, textAlign: 'center', cursor: 'pointer' }}>
             <h3 style={{ color: '#9333ea' }}>Profile</h3>
             <p style={{ color: '#666', marginTop: '0.5rem' }}>Update your profile</p>
           </div>

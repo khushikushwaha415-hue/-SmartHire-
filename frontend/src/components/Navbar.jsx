@@ -13,17 +13,22 @@ function Navbar() {
 
   return (
     <nav style={{ background: '#1d4ed8', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <h1 style={{ color: 'white', fontSize: '1.5rem' }}>SmartJobs</h1>
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <h1 style={{ color: 'white', fontSize: '1.5rem' }}>SmartHire</h1>
+      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <Link to='/jobs' style={{ color: 'white', textDecoration: 'none' }}>Jobs</Link>
+        {user?.role === 'recruiter' && (
+          <Link to='/post-job' style={{ color: 'white', textDecoration: 'none' }}>Post Job</Link>
+        )}
         {user ? (
           <>
+            <Link to='/dashboard' style={{ color: 'white', textDecoration: 'none' }}>Dashboard</Link>
             <span style={{ color: 'white' }}>Hi, {user.name}</span>
             <button onClick={logout} style={{ color: 'white', background: 'transparent', border: '1px solid white', padding: '0.3rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
           </>
         ) : (
           <>
-            <Link to='/login' style={{ color: 'white' }}>Login</Link>
-            <Link to='/register' style={{ color: 'white' }}>Register</Link>
+            <Link to='/login' style={{ color: 'white', textDecoration: 'none' }}>Login</Link>
+            <Link to='/register' style={{ color: 'white', textDecoration: 'none' }}>Register</Link>
           </>
         )}
       </div>
