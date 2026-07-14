@@ -12,6 +12,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/job'));
 app.use('/api/applications', require('./routes/application'));
+app.use('/api/resume', require('./routes/resume'));
 
 app.get('/', (req, res) => res.send('Job Portal API Running 🚀'));
 
