@@ -1,18 +1,29 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const pdfParse = require('pdf-parse');
 const fs = require('fs');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+async function extractTextFromPDF(filePath) {
+    const pdfjsLib = await
+    import ('pdfjs-dist/legacy/build/pdf.mjs');
+    const data = new Uint8Array(fs.readFileSync(filePath));
+    const doc = await pdfjsLib.getDocument({ data }).promise;
+    let text = '';
+    for (let i = 1; i <= doc.numPages; i++) {
+        const page = await doc.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    return text;
+}
 
 exports.analyzeResume = async(req, res) => {
     try {
         if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-        const pdfBuffer = fs.readFileSync(req.file.path);
-        const pdfData = await pdfParse(pdfBuffer);
-        const resumeText = pdfData.text;
+        const resumeText = await extractTextFromPDF(req.file.path);
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
         const prompt = `
     Analyze this resume and provide:

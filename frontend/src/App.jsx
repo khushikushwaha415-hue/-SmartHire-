@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -7,6 +6,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Jobs from './pages/Jobs';
 import PostJob from './pages/PostJob';
+import Resume from './pages/Resume';
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/jobs' element={<Jobs />} />
         <Route path='/post-job' element={<PostJob />} />
+        <Route path='/resume' element={<Resume />} />
         <Route path='/' element={<Login />} />
       </Routes>
     </BrowserRouter>
