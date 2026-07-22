@@ -7,10 +7,12 @@ function Dashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   const [stats, setStats] = useState({ appliedJobs: 0, availableJobs: 0 });
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     if (!user) navigate('/login');
     fetchStats();
+    fetchProfile();
   }, []);
 
   const fetchStats = async () => {
@@ -24,6 +26,36 @@ function Dashboard() {
       console.log(err);
     }
   };
+
+  const fetchProfile = async () => {
+    try {
+      const { data } = await API.get('/users/profile');
+      setProfile(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getProfileCompletion = () => {
+    if (!profile) return 0;
+    let score = 0;
+    if (profile.name) score += 25;
+    if (profile.email) score += 25;
+    if (profile.bio) score += 25;
+    if (profile.skills?.length > 0) score += 25;
+    return score;
+  };
+
+  const getCompletionMessage = () => {
+    const score = getProfileCompletion();
+    if (score === 100) return 'Profile complete! 🎉';
+    if (!profile?.bio && !profile?.skills?.length) return 'Add bio & skills';
+    if (!profile?.bio) return 'Add bio to improve';
+    if (!profile?.skills?.length) return 'Add skills to improve';
+    return 'Almost there!';
+  };
+
+  const completion = getProfileCompletion();
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
@@ -42,24 +74,28 @@ function Dashboard() {
           <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#16a34a' }}>{stats.appliedJobs}</div>
           <p style={{ color: '#666', marginTop: '0.3rem' }}>Jobs Applied</p>
         </div>
-        <div style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#9333ea' }}>AI</div>
-          <p style={{ color: '#666', marginTop: '0.3rem' }}>Resume Analyzer</p>
+        <div onClick={() => navigate('/profile')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent' }} onMouseOver={e => e.currentTarget.style.border='2px solid #9333ea'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: completion === 100 ? '#16a34a' : '#9333ea' }}>{completion}%</div>
+          <p style={{ color: '#666', marginTop: '0.3rem' }}>Profile Complete</p>
+          <p style={{ color: '#999', fontSize: '0.8rem', marginTop: '0.2rem' }}>{getCompletionMessage()}</p>
+          <div style={{ marginTop: '0.5rem', background: '#f3f4f6', borderRadius: '10px', height: '6px' }}>
+            <div style={{ width: `${completion}%`, background: completion === 100 ? '#16a34a' : '#9333ea', height: '6px', borderRadius: '10px', transition: 'width 0.3s' }}></div>
+          </div>
         </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-        <div onClick={() => navigate('/jobs')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'border 0.2s' }} onMouseOver={e => e.currentTarget.style.border='2px solid #1d4ed8'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
+        <div onClick={() => navigate('/jobs')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent' }} onMouseOver={e => e.currentTarget.style.border='2px solid #1d4ed8'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💼</div>
           <h3 style={{ color: '#1d4ed8' }}>Browse Jobs</h3>
           <p style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.3rem' }}>Find your dream job</p>
         </div>
-        <div onClick={() => navigate('/resume')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'border 0.2s' }} onMouseOver={e => e.currentTarget.style.border='2px solid #16a34a'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
+        <div onClick={() => navigate('/resume')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent' }} onMouseOver={e => e.currentTarget.style.border='2px solid #16a34a'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📄</div>
           <h3 style={{ color: '#16a34a' }}>Analyze Resume</h3>
           <p style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.3rem' }}>Get AI feedback</p>
         </div>
-        <div onClick={() => navigate('/profile')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent', transition: 'border 0.2s' }} onMouseOver={e => e.currentTarget.style.border='2px solid #9333ea'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
+        <div onClick={() => navigate('/profile')} style={{ background: 'white', padding: '1.5rem', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textAlign: 'center', cursor: 'pointer', border: '2px solid transparent' }} onMouseOver={e => e.currentTarget.style.border='2px solid #9333ea'} onMouseOut={e => e.currentTarget.style.border='2px solid transparent'}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👤</div>
           <h3 style={{ color: '#9333ea' }}>My Profile</h3>
           <p style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.3rem' }}>Update your info</p>
