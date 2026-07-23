@@ -8,3 +8,19 @@ body {
     font-family: sans-serif;
     background: #f3f4f6;
 }
+
+@media (max-width: 768px) {
+    .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+    .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    .nav-links {
+        gap: 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+    .hide-mobile {
+        display: none !important;
+    }
+}
