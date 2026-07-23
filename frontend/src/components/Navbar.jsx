@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+
+import React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -12,38 +13,47 @@ function Navbar() {
     navigate('/login');
   };
 
+  const isActive = (path) => location.pathname === path;
+
+  const linkStyle = (path) => ({
+    color: isActive(path) ? '#fbbf24' : 'white',
+    textDecoration: 'none',
+    fontWeight: isActive(path) ? '600' : '400',
+    borderBottom: isActive(path) ? '2px solid #fbbf24' : '2px solid transparent',
+    paddingBottom: '2px',
+    transition: 'all 0.2s'
+  });
+
   return (
-    <nav style={{ background: '#1d4ed8', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-      <h1 style={{ color: 'white', fontSize: '1.5rem', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>SmartHire</h1>
+    <nav style={{ background: 'linear-gradient(135deg, #1d4ed8, #7c3aed)', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
+      <h1 onClick={() => navigate(user ? '/dashboard' : '/login')} style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '0.5px' }}>
+        Smart<span style={{ color: '#fbbf24' }}>Hire</span>
+      </h1>
 
-      <button onClick={() => setMenuOpen(!menuOpen)} style={{ display: 'none', background: 'transparent', border: '1px solid white', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '1.2rem' }}
-        className="mobile-menu-btn">☰</button>
-
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Link to='/jobs' style={{ color: 'white', textDecoration: 'none' }}>Jobs</Link>
+      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <Link to='/jobs' style={linkStyle('/jobs')}>Jobs</Link>
         {user?.role === 'recruiter' && (
-          <Link to='/post-job' style={{ color: 'white', textDecoration: 'none' }}>Post Job</Link>
+          <Link to='/post-job' style={linkStyle('/post-job')}>Post Job</Link>
         )}
         {user ? (
           <>
-            <Link to='/dashboard' style={{ color: 'white', textDecoration: 'none' }}>Dashboard</Link>
-            <Link to='/profile' style={{ color: 'white', textDecoration: 'none' }}>Profile</Link>
-            <span style={{ color: 'white' }}>Hi, {user.name}</span>
-            <button onClick={logout} style={{ color: 'white', background: 'transparent', border: '1px solid white', padding: '0.3rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
+            <Link to='/dashboard' style={linkStyle('/dashboard')}>Dashboard</Link>
+            <Link to='/resume' style={linkStyle('/resume')}>Resume</Link>
+            <Link to='/profile' style={linkStyle('/profile')}>Profile</Link>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderLeft: '1px solid rgba(255,255,255,0.3)', paddingLeft: '1rem' }}>
+              <div style={{ background: '#fbbf24', color: '#1d4ed8', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                {user.name?.charAt(0).toUpperCase()}
+              </div>
+              <button onClick={logout} style={{ color: 'white', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', padding: '0.3rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.9rem' }}>Logout</button>
+            </div>
           </>
         ) : (
           <>
-            <Link to='/login' style={{ color: 'white', textDecoration: 'none' }}>Login</Link>
-            <Link to='/register' style={{ color: 'white', textDecoration: 'none' }}>Register</Link>
+            <Link to='/login' style={linkStyle('/login')}>Login</Link>
+            <Link to='/register' style={{ color: '#1d4ed8', background: 'white', padding: '0.4rem 1rem', borderRadius: '6px', textDecoration: 'none', fontWeight: '600', fontSize: '0.9rem' }}>Register</Link>
           </>
         )}
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .mobile-menu-btn { display: block !important; }
-        }
-      `}</style>
     </nav>
   );
 }
