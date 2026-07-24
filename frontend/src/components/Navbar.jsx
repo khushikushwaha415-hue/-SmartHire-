@@ -32,6 +32,9 @@ function Navbar() {
 
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
         <Link to='/jobs' style={linkStyle('/jobs')}>Jobs</Link>
+        {user?.role === 'jobseeker' && (
+          <Link to='/my-applications' style={linkStyle('/my-applications')}>My Applications</Link>
+        )}
         {user?.role === 'recruiter' && (
           <Link to='/post-job' style={linkStyle('/post-job')}>Post Job</Link>
         )}
